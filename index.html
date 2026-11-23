@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- ✏️ EDIT: page title + description (shown in Google results & link previews) -->
+  <title>Hassan Abbas · AI &amp; Data Researcher</title>
+  <meta name="description" content="Hassan Abbas — AI &amp; data researcher at National Taipei University: research interests, publications, projects and certifications." />
+  <meta name="theme-color" content="#f7f5f0" />
+
+  <!-- Decide theme + mark JS before first paint (prevents a white flash in dark mode) -->
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add('js');
+      try {
+        var t = localStorage.getItem('theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        root.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Fonts: Inter + Noto Sans TC (body), Source Serif 4 + Noto Serif TC (headings) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" />
+
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main" data-i18n="a11y.skip">Skip to content</a>
+
+  <!-- =====================================================
+       TOP NAVIGATION
+  ====================================================== -->
+  <header class="topnav" id="topnav">
+    <div class="container nav-inner">
+      <a class="brand" href="#hero">
+        <!-- ✏️ EDIT: your initials -->
+        <span class="brand-mark" aria-hidden="true">HA</span>
+        <span class="brand-name" data-i18n="hero.name">Hassan Abbas</span>
+      </a>
+
+      <nav class="nav-links" id="navLinks" aria-label="Primary">
+        <a href="#about" data-i18n="nav.about">About</a>
+        <a href="#research" data-i18n="nav.research">Research</a>
+        <a href="#publications" data-i18n="nav.publications">Publications</a>
+        <a href="#projects" data-i18n="nav.projects">Projects</a>
+        <a href="#skills" data-i18n="nav.skills">Skills</a>
+        <a href="#certifications" data-i18n="nav.certifications">Certifications</a>
+        <a href="#contact" data-i18n="nav.contact">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- Language switch (EN / 繁中) -->
+        <div class="lang-switch" id="langSwitch" role="group" aria-label="Language / 語言" data-active="en">
+          <button type="button" class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+          <button type="button" class="lang-btn" data-lang="zh" aria-pressed="false" lang="zh-Hant-TW">繁中</button>
+        </div>
+        <!-- Small theme button (keyboard-friendly; mirrors the lamp once you scroll away) -->
+        <button type="button" class="icon-btn" id="themeBtn" aria-label="Toggle theme"></button>
+        <button type="button" class="icon-btn menu-btn" id="menuBtn" aria-expanded="false" aria-controls="navLinks" aria-label="Menu">
+          <span class="menu-bars" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- =====================================================
+         HERO / BIO
+    ====================================================== -->
+    <section class="hero" id="hero" aria-labelledby="heroName">
+      <div class="container hero-grid">
+        <div class="hero-text reveal">
+          <!-- ✏️ EDIT: all hero text lives in the I18N dictionary in script.js (keys "hero.*").
+               The text here is only a fallback shown before JS loads. -->
+          <p class="eyebrow" data-i18n="hero.eyebrow">M.S. Candidate · AI Applications and Management · National Taipei University</p>
+          <h1 class="hero-name" id="heroName" data-i18n="hero.name">Hassan Abbas</h1>
+          <p class="hero-title" data-i18n="hero.title">Researcher in Machine Learning &amp; Human–Computer Interaction</p>
+          <p class="hero-bio" data-i18n-html="hero.bio">I study how intelligent systems can be made more trustworthy and useful for people.</p>
+
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#contact" data-i18n="hero.contact">Get in touch</a>
+            <a class="btn btn-ghost" href="#publications" data-i18n="nav.publications">Publications</a>
+          </div>
+
+          <!-- Social & academic links (generated from CONFIG.links in script.js) -->
+          <ul class="social-links" data-social aria-label="Academic and social links"></ul>
+        </div>
+
+        <div class="hero-visual">
+          <!-- ============ HANGING LAMP (pull the cord to toggle dark/light) ============ -->
+          <div class="lamp-anchor">
+            <div class="lamp" id="lamp">
+              <div class="lamp-wire" aria-hidden="true"></div>
+              <div class="lamp-beam" aria-hidden="true"></div>
+
+              <svg class="lamp-svg" viewBox="0 0 140 170" width="140" height="170">
+                <defs>
+                  <linearGradient id="shadeGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" class="shade-stop-a" />
+                    <stop offset="0.55" class="shade-stop-b" />
+                    <stop offset="1" class="shade-stop-a" />
+                  </linearGradient>
+                  <radialGradient id="haloGrad">
+                    <stop offset="0" stop-color="#fff1cf" stop-opacity="0.95" />
+                    <stop offset="0.35" stop-color="#ffc56b" stop-opacity="0.45" />
+                    <stop offset="1" stop-color="#ffb04d" stop-opacity="0" />
+                  </radialGradient>
+                </defs>
+
+                <circle class="lamp-halo" cx="70" cy="60" r="48" fill="url(#haloGrad)" />
+                <rect class="lamp-cap" x="62" y="0" width="16" height="12" rx="3" />
+                <path class="lamp-shade" fill="url(#shadeGrad)"
+                      d="M56 10 H84 Q88 10 90 14 L112 51 Q115 57 108 57 H32 Q25 57 28 51 L50 14 Q52 10 56 10 Z" />
+                <ellipse class="lamp-rim" cx="70" cy="56" rx="39" ry="4.5" />
+                <circle class="lamp-bulb" cx="70" cy="60" r="9" />
+
+                <!-- Pull cord: drag down (or click / press Enter) -->
+                <g class="lamp-pull" id="lampPull" tabindex="0" role="button" aria-pressed="false" aria-label="Pull the lamp cord to toggle dark mode">
+                  <line class="lamp-cord" id="lampCord" x1="100" y1="55" x2="100" y2="112" />
+                  <g id="lampBead">
+                    <rect class="lamp-bead" x="95.5" y="110" width="9" height="16" rx="4.5" />
+                    <rect class="lamp-hit" x="82" y="70" width="36" height="72" fill="transparent" />
+                  </g>
+                </g>
+              </svg>
+
+              <span class="lamp-hint" id="lampHint" aria-hidden="true" data-i18n="hero.pullHint">← pull me</span>
+            </div>
+          </div>
+
+          <figure class="portrait">
+            <!-- ✏️ EDIT: put your photo at assets/profile.jpg (square works best).
+                 If the image is missing, your initials are shown instead. -->
+            <div class="portrait-frame" data-initials="HA">
+              <img src="assets/profile.jpg" alt="Portrait of Hassan Abbas" width="220" height="220"
+                   onerror="this.closest('.portrait').classList.add('no-photo'); this.remove();" />
+            </div>
+            <figcaption data-i18n="hero.caption">Taipei, Taiwan</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         01 · ABOUT + RECENT UPDATES
+    ====================================================== -->
+    <section class="section" id="about" aria-labelledby="aboutTitle">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="section-index">01</span>
+          <h2 id="aboutTitle" data-i18n="about.heading">About</h2>
+        </header>
+
+        <div class="about-grid">
+          <div class="card about-main reveal">
+            <!-- ✏️ EDIT: text in I18N ("about.p1", "about.p2") -->
+            <p data-i18n-html="about.p1">Longer biography paragraph.</p>
+            <p data-i18n-html="about.p2">Second paragraph.</p>
+            <h3 class="sub-head" data-i18n="about.eduHeading">Education</h3>
+            <!-- Generated from EDUCATION in script.js -->
+            <ol class="edu-list" id="eduList"></ol>
+          </div>
+
+          <aside class="card news reveal" aria-labelledby="newsTitle">
+            <h3 class="news-title" id="newsTitle">
+              <span class="pulse-dot" aria-hidden="true"></span>
+              <span data-i18n="news.heading">Recent Updates &amp; Milestones</span>
+            </h3>
+            <!-- Generated from NEWS in script.js -->
+            <ol class="news-list" id="newsList"></ol>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         02 · RESEARCH INTERESTS
+    ====================================================== -->
+    <section class="section" id="research" aria-labelledby="researchTitle">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="section-index">02</span>
+          <h2 id="researchTitle" data-i18n="research.heading">Research Interests</h2>
+        </header>
+        <p class="section-lead reveal" data-i18n="research.lead">Questions I keep coming back to.</p>
+        <!-- Generated from RESEARCH in script.js -->
+        <div class="research-grid reveal" id="researchGrid"></div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         03 · PUBLICATIONS (filter + BibTeX + abstract modal)
+    ====================================================== -->
+    <section class="section" id="publications" aria-labelledby="pubsTitle">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="section-index">03</span>
+          <h2 id="pubsTitle" data-i18n="pubs.heading">Publications &amp; Conference Papers</h2>
+        </header>
+        <p class="section-lead reveal" data-i18n-html="pubs.lead">Peer-reviewed papers, preprints and talks.</p>
+
+        <div class="card pub-controls reveal">
+          <div class="chip-row" id="topicFilters" role="group" aria-label="Filter by topic"></div>
+          <div class="pub-controls-row">
+            <label class="field-select">
+              <span class="sr-only" data-i18n="pubs.yearLabel">Year</span>
+              <select id="yearFilter"></select>
+            </label>
+            <label class="field-select">
+              <span class="sr-only" data-i18n="pubs.typeLabel">Type</span>
+              <select id="typeFilter"></select>
+            </label>
+            <label class="field-search">
+              <span class="sr-only" data-i18n="pubs.searchLabel">Search publications</span>
+              <input type="search" id="pubSearch" autocomplete="off"
+                     data-i18n-attr="placeholder:pubs.search" placeholder="Search title, author, venue…" />
+            </label>
+          </div>
+          <p class="pub-count" id="pubCount" aria-live="polite"></p>
+        </div>
+
+        <!-- Generated from PUBLICATIONS in script.js -->
+        <ol class="pub-list" id="pubList"></ol>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         04 · PROJECTS
+    ====================================================== -->
+    <section class="section" id="projects" aria-labelledby="projectsTitle">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="section-index">04</span>
+          <h2 id="projectsTitle" data-i18n="projects.heading">Projects</h2>
+        </header>
+        <p class="section-lead reveal" data-i18n="projects.lead">Selected research prototypes and tools.</p>
+        <!-- Generated from PROJECTS in script.js -->
+        <div class="project-grid reveal" id="projectGrid"></div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         05 · SKILLS / TECH STACK
+    ====================================================== -->
+    <section class="section" id="skills" aria-labelledby="skillsTitle">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="section-index">05</span>
+          <h2 id="skillsTitle" data-i18n="skills.heading">Skills &amp; Tech Stack</h2>
+        </header>
+        <!-- Generated from SKILLS in script.js -->
+        <div class="skills-grid reveal" id="skillsGrid"></div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         06 · CERTIFICATIONS (public: names only; files only in admin mode)
+    ====================================================== -->
+    <section class="section" id="certifications" aria-labelledby="certsTitle">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="section-index">06</span>
+          <h2 id="certsTitle" data-i18n="certs.heading">Certifications</h2>
+        </header>
+        <p class="section-lead reveal" data-i18n="certs.lead">Professional training and credentials.</p>
+        <!-- Generated from CERTIFICATIONS in script.js -->
+        <ul class="cert-list reveal" id="certList"></ul>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         07 · CONTACT
+    ====================================================== -->
+    <section class="section" id="contact" aria-labelledby="contactTitle">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="section-index">07</span>
+          <h2 id="contactTitle" data-i18n="contact.heading">Contact</h2>
+        </header>
+
+        <div class="contact-grid">
+          <div class="reveal">
+            <p class="section-lead" data-i18n="contact.lead">I'm happy to talk about research collaborations.</p>
+            <ul class="social-links social-links--stacked" data-social aria-label="Academic and social links"></ul>
+          </div>
+
+          <form class="card contact-form reveal" id="contactForm" novalidate>
+            <label>
+              <span data-i18n="contact.name">Name</span>
+              <input type="text" name="name" required autocomplete="name" />
+            </label>
+            <label>
+              <span data-i18n="contact.email">Email</span>
+              <input type="email" name="email" required autocomplete="email" />
+            </label>
+            <label>
+              <span data-i18n="contact.message">Message</span>
+              <textarea name="message" rows="5" required></textarea>
+            </label>
+            <button type="submit" class="btn btn-primary" data-i18n="contact.send">Send message</button>
+            <p class="form-note" data-i18n="contact.note">Opens your email app.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =====================================================
+       FOOTER (contains the hidden vault lock icon)
+  ====================================================== -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> <span data-i18n="hero.name">Hassan Abbas</span>. <span data-i18n="footer.rights">All rights reserved.</span></p>
+      <p class="footer-meta">
+        <span data-i18n="footer.updated">Last updated</span> <span id="lastUpdated"></span>
+        <!-- Hidden admin trigger: a faint lock icon. Shortcut: Ctrl/⌘ + Shift + L -->
+        <button type="button" class="vault-trigger" id="vaultTrigger" aria-label="Private vault"></button>
+      </p>
+    </div>
+  </footer>
+
+  <!-- =====================================================
+       DIALOGS, ADMIN BAR, TOAST
+  ====================================================== -->
+  <dialog class="modal" id="infoModal" aria-labelledby="infoModalTitle">
+    <div class="modal-card">
+      <header class="modal-head">
+        <h3 id="infoModalTitle"></h3>
+        <button type="button" class="icon-btn" data-close data-i18n-attr="aria-label:modal.close" aria-label="Close"></button>
+      </header>
+      <div class="modal-body" id="infoModalBody"></div>
+    </div>
+  </dialog>
+
+  <dialog class="modal modal-sm" id="adminModal" aria-labelledby="adminTitle">
+    <form class="modal-card" id="adminForm">
+      <header class="modal-head">
+        <h3 id="adminTitle" data-i18n="admin.title">Private vault</h3>
+        <button type="button" class="icon-btn" data-close data-i18n-attr="aria-label:modal.close" aria-label="Close"></button>
+      </header>
+      <div class="modal-body">
+        <p class="muted" data-i18n="admin.desc">Enter your password to decrypt certificate files on this device.</p>
+        <label class="field">
+          <span data-i18n="admin.passLabel">Password</span>
+          <input type="password" id="adminPass" autocomplete="off" required />
+        </label>
+        <p class="form-error" id="adminError" role="alert"></p>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" data-close data-i18n="admin.cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="adminSubmit" data-i18n="admin.unlock">Unlock</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="admin-bar" id="adminBar" hidden>
+    <span class="admin-bar-dot" aria-hidden="true"></span>
+    <span data-i18n="admin.badge">Admin mode</span>
+    <button type="button" id="adminLock" data-i18n="admin.lock">Lock</button>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

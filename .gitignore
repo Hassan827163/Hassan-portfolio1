@@ -1,0 +1,3 @@
+# Original (unencrypted) certificates — never commit these
+private/
+.DS_Store

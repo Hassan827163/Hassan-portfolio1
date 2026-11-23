@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Certificate Vault Tool — encrypt files locally</title>
+<style>
+  body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f7f5f0;color:#1b2230;margin:0;padding:32px 16px;line-height:1.6}
+  main{max-width:720px;margin:auto;background:#fff;border:1px solid #e3e0d8;border-radius:16px;padding:28px;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+  h1{margin-top:0;font-size:1.5rem}
+  h2{font-size:1.05rem;margin:28px 0 8px}
+  label{display:block;font-weight:600;margin:12px 0 6px}
+  input[type=password],input[type=file]{width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;font:inherit}
+  button{margin-top:14px;padding:10px 18px;border:0;border-radius:999px;background:#1d4f91;color:#fff;font:600 .95rem system-ui;cursor:pointer}
+  button[disabled]{opacity:.5;cursor:progress}
+  textarea{width:100%;height:84px;font:12px ui-monospace,Consolas,monospace;padding:10px;border-radius:8px;border:1px solid #ccc}
+  .note{background:#fff7e6;border:1px solid #f0d49b;border-radius:10px;padding:12px 14px;font-size:.92rem}
+  .ok{color:#2f7d55}.err{color:#b3261e}
+  ol li{margin-bottom:4px}
+  code{background:#f1efe9;padding:1px 5px;border-radius:4px}
+</style>
+</head>
+<body>
+<main>
+  <h1>🔒 Certificate Vault Tool</h1>
+  <p>Encrypts your certificate files <strong>inside this browser</strong> — nothing is uploaded anywhere.
+     Open this file by double-clicking it (Chrome / Edge / Firefox).</p>
+  <p class="note">Use the <strong>same password every time</strong> (for the verifier and every file).
+     Save it in a password manager. If you forget it, just create a new one and re-encrypt.</p>
+
+  <label for="pass">Password</label>
+  <input type="password" id="pass" autocomplete="new-password">
+  <label for="pass2">Repeat password</label>
+  <input type="password" id="pass2" autocomplete="new-password">
+
+  <h2>Step 1 — Verifier (do this once per password)</h2>
+  <button id="mkVerifier">Create verifier</button>
+  <p>Copy this and paste it into <code>script.js</code> → <code>CONFIG.vault.verifier: '…'</code></p>
+  <textarea id="verifierOut" readonly placeholder="verifier will appear here"></textarea>
+
+  <h2>Step 2 — Encrypt certificate files</h2>
+  <input type="file" id="files" multiple accept=".pdf,.png,.jpg,.jpeg,.webp">
+  <button id="encryptBtn">Encrypt &amp; download</button>
+  <ol id="log"></ol>
+
+  <h2>Step 3 — Put them on your site</h2>
+  <ol>
+    <li>Move the downloaded <code>*.enc</code> files into your site's <code>certificates</code> folder.</li>
+    <li>In <code>script.js</code> → <code>CERTIFICATIONS</code>, set <code>file: 'certificates/NAME.enc'</code> for each one
+        (the exact line is shown in the list above).</li>
+    <li>Upload <code>script.js</code> and the <code>.enc</code> files to GitHub. <strong>Never upload the original files.</strong></li>
+  </ol>
+</main>
+
+<script>
+/* Same format as script.js: [16-byte salt][12-byte IV][AES-256-GCM ciphertext+tag],
+   key = PBKDF2-SHA256(passphrase, salt, 600000). */
+const ITERATIONS = 600000;
+const VERIFIER_TEXT = 'portfolio-vault-ok';
+const $ = (id) => document.getElementById(id);
+
+function getPass() {
+  const a = $('pass').value, b = $('pass2').value;
+  if (!a) { alert('Please enter a password.'); return null; }
+  if (a !== b) { alert('The two passwords do not match.'); return null; }
+  if (a.length < 8 && !confirm('This password is short and easy to guess. Continue anyway?')) return null;
+  return a;
+}
+
+async function encrypt(bytes, pass) {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: ITERATIONS, hash: 'SHA-256' },
+    base, { name: 'AES-GCM', length: 256 }, false, ['encrypt']);
+  const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, bytes));
+  const out = new Uint8Array(28 + ct.length);
+  out.set(salt, 0); out.set(iv, 16); out.set(ct, 28);
+  return out;
+}
+
+/* Safe file name: lowercase, spaces/commas → dashes */
+function safeName(name) {
+  const dot = name.lastIndexOf('.');
+  const base = (dot > 0 ? name.slice(0, dot) : name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const ext = dot > 0 ? name.slice(dot + 1).toLowerCase() : 'bin';
+  return `${base || 'file'}.${ext}.enc`;
+}
+
+if (!window.crypto || !crypto.subtle) {
+  document.querySelector('main').insertAdjacentHTML('afterbegin',
+    '<p class="err">This browser cannot encrypt here. Please open this file in Chrome, Edge or Firefox.</p>');
+}
+
+$('mkVerifier').onclick = async () => {
+  const pass = getPass(); if (!pass) return;
+  const v = await encrypt(new TextEncoder().encode(VERIFIER_TEXT), pass);
+  $('verifierOut').value = btoa(String.fromCharCode(...v));
+  $('verifierOut').select();
+};
+
+$('encryptBtn').onclick = async () => {
+  const pass = getPass(); if (!pass) return;
+  const files = [...$('files').files];
+  if (!files.length) { alert('Choose one or more files first.'); return; }
+  $('encryptBtn').disabled = true;
+  for (const f of files) {
+    const li = document.createElement('li');
+    li.textContent = `Encrypting ${f.name}…`;
+    $('log').appendChild(li);
+    try {
+      const enc = await encrypt(new Uint8Array(await f.arrayBuffer()), pass);
+      const name = safeName(f.name);
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([enc], { type: 'application/octet-stream' }));
+      a.download = name;
+      document.body.appendChild(a); a.click(); a.remove();
+      li.innerHTML = `<span class="ok">✓</span> ${f.name} → <strong>${name}</strong><br><code>file: 'certificates/${name}',</code>`;
+    } catch (e) {
+      li.innerHTML = `<span class="err">✗ ${f.name}: ${e.message}</span>`;
+    }
+  }
+  $('encryptBtn').disabled = false;
+};
+</script>
+</body>
+</html>
